@@ -9,14 +9,8 @@ BAML (Boundary AI Markup Language) is a DSL for building LLM applications with s
 
 ## How BAML Works
 
-```
-baml_src/           → Your BAML definitions (types, functions, clients)
-    |
-    v  (baml-cli generate)
-baml_client/        → Auto-generated code (DO NOT EDIT)
-```
-
 - All `.baml` files in `baml_src/` are globally accessible to each other
+- Generate the client with `baml-cli generate`
 - The generated `baml_client/` provides type-safe functions you import and call
 - BAML types become Pydantic models (Python), TypeScript types, Go structs, or Sorbet types (Ruby)
 
@@ -131,7 +125,7 @@ client<llm> Resilient {
 
 ### Generator
 
-Configure code generation (one per project):
+Configure code generation:
 
 ```baml
 generator target {
@@ -141,6 +135,10 @@ generator target {
     version "0.203.1"
 }
 ```
+
+You may set up codegen for multiple locations in multiple languages.
+For example, you may want to keep backend and frontend types aligned for your respective BAML clients.
+You can do this by initializing two `generator` blocks.
 
 ---
 
