@@ -25,55 +25,36 @@ This includes but is not limited to:
 - Most documents can fit into your context window.
 - However, if you must partially read a filing, read the appropriate report.
 
-### Reading reports
+## Reading filings
 
+Essential setup
+
+Install with uv
+```sh
+uv add edgartools
 ```
->>> import edgar
+
+```python
+>>> import edgar # Notice the difference between package install name and import name. This is extremely important.
 >>> edgar.set_identity("name email@example.com")
->>> company = edgar.Company("WMT")
->>> filing = company.latest(form=["10-K", "10-Q"])
->>> filing.text() # get entire filing as text
->>> filing.markdown() # get entire filing as markdown
->>> filing.reports # get list of specific reports
->>> print(str(filing.reports[37].text())) # get a specific report as text
-"""
-  Segments and Disaggregated Revenue -
-  Revenue from Contract with Customer
-  Excluding Assessed Tax Walmart U. S
-  (Details) - USD ($)
-  $ in Millions
-  Segments and Disaggregated Revenue -
-  Revenue from Contract with Customer
-  Excluding Assessed Tax Walmart U. S
-  (Details) - USD ($)
-  $ in Millions
-  Revenue from External Customer [Line        3 Months Ended                     9 Months Ended
-  Items]                                       Oct. 31, 2025    Oct. 31, 2024     Oct. 31, 2025    Oct. 31, 2024
- ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  Net sales                                        $ 177,769        $ 168,003         $ 517,500        $ 495,708
-  Walmart U. S.
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                          120,678          114,875           353,752          338,892
-  Walmart U. S. | eCommerce
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                           24,800           19,500            70,000           56,000
-  Grocery | Walmart U. S.
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                           71,713           69,344           210,636          204,455
-  General merchandise | Walmart U. S.
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                           27,366           26,621            82,100           81,312
-  Health and wellness | Walmart U. S.
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                           18,379           16,360            51,871           45,639
-  Other categories | Walmart U. S.
-  Revenue from External Customer [Line
-  Items]
-  Net sales                                          $ 3,220          $ 2,550           $ 9,145          $ 7,486
-"""
 ```
+
+Fetching company filings
+```python
+>>> filing = edgar.get_by_accession_number("0000104169-25-000191") # fetch filing by ID - no need to create Company class.
+
+>>> company = edgar.Company("WMT") # protip: you can use CIK, or ticker here.
+>>> filing = company.latest(form=["10-K", "10-Q"]) # protip: you can specify multiple form types here
+>>> filing.markdown() # get entire filing as markdown
+>>> filing.text() # get entire filing as beautifully rendered text. Prefer this as output for readability.
+
+>>> # You may save the entire file to /tmp/ for fast repeated grepping
+>>> with open(f"/tmp/{filing.accession_number}.txt", "w") as fh:
+...     fh.write(filing.text())
+
+>>> filing.reports # get list of specific reports (disaggregated revenues, etc)
+>>> print(str(filing.reports[37].text())) # get a specific report as text
+```
+
+A full filing may be too large to read at once with the `Read` tool.
+However, you can either split the file into 3-4 chunks, or read only the relevant reports directly.
