@@ -1,0 +1,17 @@
+{
+  "exposure": "codemode",
+  "timeoutMs": 15000,
+  "specs": [
+    {
+      "name": "mock",
+      "spec": "http://127.0.0.1:8077/openapi.json",
+      "credentials": {
+        "HTTPBearer": { "envVar": "MOCK_TOKEN" },
+        "APIKeyHeader": { "envVar": "MOCK_API_KEY" },
+        "APIKeyQuery": { "envVar": "MOCK_API_KEY" }
+      },
+      "descriptionBudget": 1200,
+      "maxModelChars": 4000
+    }
+  ]
+}
